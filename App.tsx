@@ -6,7 +6,7 @@ import { useFonts } from "expo-font";
 
 export default function App() {
   const [isFontLoaded] = useFonts({
-    "Source Sans Pro": require("./assets/fonts/SourceSansPro-Italic.ttf"),
+    "Source Sans Pro": require("./assets/fonts/SourceSansPro-Regular.ttf"),
   });
   if (!isFontLoaded) {
     return null;

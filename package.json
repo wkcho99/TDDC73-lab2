@@ -11,21 +11,24 @@
   "dependencies": {
     "@react-native-community/datetimepicker": "^6.5.2",
     "expo": "~47.0.6",
+    "expo-font": "~11.0.1",
     "expo-status-bar": "~1.4.2",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-hook-form": "^7.39.4",
     "react-native": "0.70.5",
     "react-native-date-picker": "^4.2.6",
+    "react-native-dropdown-select-list": "^2.0.2",
     "react-native-month-picker": "^1.0.1",
     "react-native-month-year-picker": "^1.8.2",
     "react-native-paper": "^5.0.0-rc.10",
-    "react-native-web": "~0.18.9",
-    "expo-font": "~11.0.1"
+    "react-native-select-dropdown": "^3.0.3",
+    "react-native-vector-icons": "^9.2.0",
+    "react-native-web": "~0.18.9"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
-    "@types/react": "~18.0.14",
+    "@types/react": "~18.0.24",
     "@types/react-native": "~0.70.6",
     "typescript": "^4.6.3"
   },

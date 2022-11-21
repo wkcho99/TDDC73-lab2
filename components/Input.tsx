@@ -19,7 +19,7 @@ export const Input = (props: InputProps) => {
   const shadowAnim = useRef(new Animated.Value(0));
   const onFocus = () => {
     Animated.timing(shadowAnim.current, {
-      toValue: 0.4,
+      toValue: 0.25,
       duration: 300,
       useNativeDriver: true,
     }).start();
@@ -54,7 +54,8 @@ export const Input = (props: InputProps) => {
 };
 const styles = StyleSheet.create({
   input: {
-    padding: 3,
+    minHeight: 40,
+    padding: 10,
     height: "auto",
     color: "#000000",
     borderColor: "#EEEEEE",
@@ -67,8 +68,13 @@ const styles = StyleSheet.create({
   },
   container: {
     marginBottom: 5,
-    shadowOffset: { width: -2, height: 0 },
-    shadowRadius: 3,
-    shadowColor: "#171717",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowRadius: 4.65,
+
+    elevation: 6,
   },
 });
