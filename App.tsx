@@ -1,23 +1,30 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import {CreditCardForm} from './components/Form'
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { CreditCardForm } from "./components/Form";
+import { useFonts } from "expo-font";
 
 export default function App() {
-  
+  const [isFontLoaded] = useFonts({
+    "Source Sans Pro": require("./assets/fonts/SourceSansPro-Italic.ttf"),
+  });
+  if (!isFontLoaded) {
+    return null;
+  }
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+    <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
       <CreditCardForm />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    maxHeight: 500,
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
