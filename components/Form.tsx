@@ -2,8 +2,9 @@ import React, { useState, useDeferredValue } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Input } from "./Input";
 import { Dropdown } from "./Dropdown";
-import { Card } from "react-native-paper";
+import { Button, Card } from "react-native-paper";
 import { Label } from "./Label";
+import { CreditCard } from "./CreditCard";
 export interface CreditCard {
   expiredDate: Date;
   cardHolder: string;
@@ -20,7 +21,7 @@ export const CreditCardForm = () => {
   const [date, setDate] = useState({} as Expiry);
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
-  const month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const month = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
   const year = [
     2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032,
   ];
@@ -42,7 +43,9 @@ export const CreditCardForm = () => {
 
   return (
     <View>
+
       <Card mode="elevated" style={Styles.container}>
+
         <Label>Card Number</Label>
         <Input
           value={deferredCardNumber}
@@ -118,7 +121,7 @@ export const CreditCardForm = () => {
               />
             </View>
           </View>
-          <View style={{ minWidth: 75 }}>
+          <View style={{ minWidth: 75, height: 40 }}>
             <Label>CVV</Label>
             <Input
               keyboardType="numeric"
@@ -127,19 +130,26 @@ export const CreditCardForm = () => {
             />
           </View>
         </View>
+        <Button style={Styles.submit} textColor='white'>Submit</Button>
       </Card>
     </View>
   );
 };
 const Styles = StyleSheet.create({
   container: {
-    marginTop: 200,
     padding: 10,
+    paddingTop: 200,
     width: "100%",
-    alignContent: "center",
+    borderRadius: 8,
+    backgroundColor: "white"
   },
   dropdownContainer: {
     marginRight: 10,
     minWidth: 250,
+  },
+  submit:{
+    marginTop: 25,
+    backgroundColor: 'dodgerblue',
+    borderRadius: 5
   },
 });

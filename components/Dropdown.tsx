@@ -44,11 +44,12 @@ export const Dropdown = (props: DropdownProps) => {
             <FontAwesome
               name={isOpened ? "chevron-up" : "chevron-down"}
               color={"#444"}
-              size={18}
+              size={12}
             />
           );
         }}
         buttonStyle={customStyle}
+        buttonTextStyle={Styles.buttonTextStyle}
         dropdownStyle={Styles.dropdownDropdownStyle}
         rowStyle={Styles.dropdownRowStyle}
         rowTextStyle={Styles.dropdownRowTxtStyle}
@@ -64,20 +65,21 @@ const Styles = StyleSheet.create({
     backgroundColor: "#FFF",
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#444",
+    borderColor: "#CCC",
   },
   dropdownDropdownStyle: { backgroundColor: "#EFEFEF", borderRadius: 10 },
   dropdownRowStyle: {
     backgroundColor: "#EFEFEF",
-    borderBottomColor: "#C5C5C5",
+    borderBottomWidth: 0
   },
-  dropdownRowTxtStyle: { color: "#444" },
+  dropdownRowTxtStyle: { color: "#444", textAlign:'left' },
   focus: {
     borderColor: "#87ceeb",
     outlineStyle: "none",
   },
   container: {
     marginBottom: 5,
+    
     shadowColor: "#000",
     shadowOffset: {
       width: 2,
@@ -85,4 +87,7 @@ const Styles = StyleSheet.create({
     },
     shadowRadius: 8,
   },
+  buttonTextStyle:{
+    fontSize: 16,
+  }
 });

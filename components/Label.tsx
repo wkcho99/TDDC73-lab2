@@ -8,6 +8,7 @@ export const Label: React.FC<{ children?: React.ReactNode }> = ({
 const styles = StyleSheet.create({
   text: {
     marginBottom: 5,
+    paddingLeft: 6,
     fontFamily: "Source Sans Pro",
   },
 });

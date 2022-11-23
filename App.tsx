@@ -3,6 +3,7 @@ import React from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { CreditCardForm } from "./components/Form";
 import { useFonts } from "expo-font";
+import { CreditCard } from "./components/CreditCard";
 
 export default function App() {
   const [isFontLoaded] = useFonts({
@@ -13,7 +14,7 @@ export default function App() {
   }
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="auto" />
+      <CreditCard/>
       <CreditCardForm />
     </SafeAreaView>
   );
@@ -21,6 +22,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 150,
     maxHeight: 500,
     flex: 1,
 

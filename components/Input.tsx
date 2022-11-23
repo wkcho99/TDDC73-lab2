@@ -58,12 +58,12 @@ const styles = StyleSheet.create({
     padding: 10,
     height: "auto",
     color: "#000000",
-    borderColor: "#EEEEEE",
+    borderColor: "#CCC",
     borderWidth: 1,
-    borderRadius: 4,
+    borderRadius: 5,
   },
   focus: {
-    borderColor: "#87ceeb",
+    borderColor: "deepskyblue",
     outlineStyle: "none",
   },
   container: {
