@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
   container: {
     maxHeight: 500,
     flex: 1,
+
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",

@@ -19,7 +19,7 @@ export const Input = (props: InputProps) => {
   const shadowAnim = useRef(new Animated.Value(0));
   const onFocus = () => {
     Animated.timing(shadowAnim.current, {
-      toValue: 0.25,
+      toValue: 10,
       duration: 300,
       useNativeDriver: true,
     }).start();
@@ -40,7 +40,7 @@ export const Input = (props: InputProps) => {
     <Animated.View
       style={StyleSheet.flatten([
         styles.container,
-        { shadowOpacity: shadowAnim.current },
+        { elevation: shadowAnim.current },
       ])}
     >
       <TextInput
@@ -67,14 +67,14 @@ const styles = StyleSheet.create({
     outlineStyle: "none",
   },
   container: {
+    padding: 5,
     marginBottom: 5,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowRadius: 4.65,
-
-    elevation: 6,
+    elevation: 10,
+    // shadowColor: "#000",
+    // shadowOffset: {
+    //   width: 2,
+    //   height: 3,
+    // },
+    // shadowRadius: 4.65,
   },
 });
