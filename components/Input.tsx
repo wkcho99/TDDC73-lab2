@@ -23,6 +23,7 @@ export const Input = (props: InputProps) => {
       duration: 300,
       useNativeDriver: true,
     }).start();
+    if (props.onFocusCallback) props.onFocusCallback();
     setIsFocused(true);
   };
   const onBlur = () => {
@@ -31,6 +32,8 @@ export const Input = (props: InputProps) => {
       duration: 300,
       useNativeDriver: true,
     }).start();
+    if (props.onBlurCallback) props.onBlurCallback();
+
     setIsFocused(false);
   };
   const customStyle = isFocused
