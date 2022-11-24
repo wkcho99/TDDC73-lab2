@@ -8,15 +8,13 @@ interface FadingImageProps {
 export const FadingImage: React.FC<FadingImageProps> = ({ source, style }) => {
   const fadeAnim = useRef(new Animated.Value(0));
   const onLoad = () => {
+    fadeAnim.current = new Animated.Value(0);
     Animated.timing(fadeAnim.current, {
       toValue: 1,
       duration: 1500,
       useNativeDriver: true,
     }).start();
   };
-  useEffect(() => {
-    fadeAnim.current = new Animated.Value(0);
-  }, [source, fadeAnim.current]);
   return (
     <Animated.Image
       onLoad={onLoad}

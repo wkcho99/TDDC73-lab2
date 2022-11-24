@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   View,
   ImageBackground,
@@ -8,6 +8,8 @@ import {
   Animated,
 } from "react-native";
 import { FadingImage } from "./FadingImage";
+import { FocusableBox } from "./FocusableBox";
+import { Label } from "./Label";
 export enum CardType {
   AMEX = 1,
   DINERSCLUB,
@@ -17,19 +19,46 @@ export enum CardType {
   UNION,
   VISA,
 }
-export interface CreditCardProps {
-  expiryDate?: Date | String;
+export interface CreditCardInput {
+  expiryDate?: Date;
   cardHolder?: String;
   cardNumber?: String;
+  cvv?: String;
   cardType?: CardType;
 }
+export interface CreditCardProps extends CreditCardInput {
+  focused?: keyof CreditCardInput;
+}
+export const CardNumberText: React.FC<{ children?: React.ReactNode }> = ({
+  children,
+}) => {
+  return (
+    <Text
+      style={{
+        fontFamily: "Source Sans Pro",
+        fontWeight: "500",
+        fontSize: 15,
+        marginRight: 15,
+        color: "white",
+      }}
+    >
+      {children}
+    </Text>
+  );
+};
 export const CreditCard = ({
   expiryDate,
   cardHolder,
   cardNumber,
   cardType,
+  focused,
 }: CreditCardProps) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const cardImage = useMemo(() => require("../assets/image/6.jpeg"), []);
+  const cardNumberSections =
+    cardNumber?.replaceAll(" ", "").match(/.{1,4}/g) ?? [];
+  const formattedDate = expiryDate
+    ? `${expiryDate.getMonth() + 1}/${expiryDate.getFullYear()}`
+    : "MM/YY";
   const getLogoByType = useCallback((type?: CardType) => {
     const basePath = "../assets/image";
     switch (type) {
@@ -55,7 +84,7 @@ export const CreditCard = ({
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require("../assets/image/6.jpeg")}
+        source={cardImage}
         resizeMode="cover"
         style={styles.card}
       >
@@ -67,7 +96,31 @@ export const CreditCard = ({
           />
           <FadingImage source={getLogoByType(cardType)} style={styles.chip} />
         </View>
-        <View></View>
+        <FocusableBox
+          isFocused={focused === "cardNumber"}
+          style={styles.cardNumber}
+        >
+          <CardNumberText>{cardNumberSections[0]}</CardNumberText>
+          <CardNumberText>{cardNumberSections[1]}</CardNumberText>
+          <CardNumberText>{cardNumberSections[2]}</CardNumberText>
+          <CardNumberText>{cardNumberSections[3]}</CardNumberText>
+        </FocusableBox>
+        <View style={styles.cardInfo}>
+          <FocusableBox
+            isFocused={focused === "cardHolder"}
+            style={styles.cardHolder}
+          >
+            <Text style={{ color: "gray" }}>Card Holder</Text>
+            <CardNumberText>{cardHolder}</CardNumberText>
+          </FocusableBox>
+          <FocusableBox
+            style={styles.cardHolder}
+            isFocused={focused === "expiryDate"}
+          >
+            <Text style={{ color: "gray" }}>Card Holder</Text>
+            <CardNumberText>{formattedDate}</CardNumberText>
+          </FocusableBox>
+        </View>
       </ImageBackground>
     </View>
   );
@@ -78,13 +131,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     marginBottom: -150,
-    zIndex: 999,
     minHeight: 200,
     minWidth: 300,
     overflow: "hidden",
   },
   card: {
-    paddingVertical: 20,
+    paddingTop: 20,
+    paddingBottom: 130,
     paddingHorizontal: 10,
     borderRadius: 8,
     flex: 1,
@@ -92,5 +145,20 @@ const styles = StyleSheet.create({
   chip: {
     height: 40,
     width: 80,
+  },
+  cardInfo: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  cardNumber: {
+    marginTop: 15,
+    marginBottom: 10,
+    marginHorizontal: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    minHeight: 45,
+  },
+  cardHolder: {
+    flexDirection: "column",
   },
 });
