@@ -46,11 +46,13 @@ export const CardNumberText: React.FC<{ children?: React.ReactNode }> = ({
     </Text>
   );
 };
+
 export const CreditCard = ({
   expiryDate,
   cardHolder,
   cardNumber,
   cardType,
+  cvv,
   focused,
 }: CreditCardProps) => {
   const cardImage = useMemo(() => require("../assets/image/6.jpeg"), []);
@@ -80,6 +82,7 @@ export const CreditCard = ({
         return undefined;
     }
   }, []);
+  const cardLogo = useMemo(() => getLogoByType(cardType), [cardType]);
 
   return (
     <View style={styles.container}>
@@ -88,39 +91,77 @@ export const CreditCard = ({
         resizeMode="cover"
         style={styles.card}
       >
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Image
-            source={require("../assets/image/chip.png")}
-            resizeMode="contain"
-            style={styles.chip}
-          />
-          <FadingImage source={getLogoByType(cardType)} style={styles.chip} />
-        </View>
-        <FocusableBox
-          isFocused={focused === "cardNumber"}
-          style={styles.cardNumber}
-        >
-          <CardNumberText>{cardNumberSections[0]}</CardNumberText>
-          <CardNumberText>{cardNumberSections[1]}</CardNumberText>
-          <CardNumberText>{cardNumberSections[2]}</CardNumberText>
-          <CardNumberText>{cardNumberSections[3]}</CardNumberText>
-        </FocusableBox>
-        <View style={styles.cardInfo}>
-          <FocusableBox
-            isFocused={focused === "cardHolder"}
-            style={styles.cardHolder}
-          >
-            <Text style={{ color: "gray" }}>Card Holder</Text>
-            <CardNumberText>{cardHolder}</CardNumberText>
-          </FocusableBox>
-          <FocusableBox
-            style={styles.cardHolder}
-            isFocused={focused === "expiryDate"}
-          >
-            <Text style={{ color: "gray" }}>Card Holder</Text>
-            <CardNumberText>{formattedDate}</CardNumberText>
-          </FocusableBox>
-        </View>
+        {focused === "cvv" ? (
+          <>
+            <View style={styles.blackband}></View>
+            <View style={{ paddingHorizontal: 10 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  marginRight: 5,
+                  marginTop: 10,
+                  marginBottom: 5,
+                }}
+              >
+                <Text style={{ color: "white" }}>CVV</Text>
+              </View>
+              <View style={styles.cvv}>
+                <Text>{"*".repeat(cvv?.length ?? 0)}</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Image
+                  source={cardLogo}
+                  resizeMode="contain"
+                  style={styles.chip}
+                />
+              </View>
+            </View>
+          </>
+        ) : (
+          <View style={styles.frontCard}>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Image
+                source={require("../assets/image/chip.png")}
+                resizeMode="contain"
+                style={styles.chip}
+              />
+              <FadingImage source={cardLogo} style={styles.chip} />
+            </View>
+            <FocusableBox
+              isFocused={focused === "cardNumber"}
+              style={styles.cardNumber}
+            >
+              <CardNumberText>{cardNumberSections[0]}</CardNumberText>
+              <CardNumberText>{cardNumberSections[1]}</CardNumberText>
+              <CardNumberText>{cardNumberSections[2]}</CardNumberText>
+              <CardNumberText>{cardNumberSections[3]}</CardNumberText>
+            </FocusableBox>
+            <View style={styles.cardInfo}>
+              <FocusableBox
+                isFocused={focused === "cardHolder"}
+                style={styles.cardHolder}
+              >
+                <Text style={{ color: "gray" }}>Card Holder</Text>
+                <CardNumberText>{cardHolder || "FULLNAME"}</CardNumberText>
+              </FocusableBox>
+              <FocusableBox
+                style={styles.cardHolder}
+                isFocused={focused === "expiryDate"}
+              >
+                <Text style={{ color: "gray" }}>Card Holder</Text>
+                <CardNumberText>{formattedDate}</CardNumberText>
+              </FocusableBox>
+            </View>
+          </View>
+        )}
       </ImageBackground>
     </View>
   );
@@ -130,15 +171,22 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
     borderWidth: 1,
-    marginBottom: -150,
-    minHeight: 200,
+    marginBottom: -180,
+    marginHorizontal: 10,
+    minHeight: 230,
     minWidth: 300,
     overflow: "hidden",
+    zIndex: 999,
+  },
+  frontCard: {
+    flexDirection: "column",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    minHeight: "90%",
   },
   card: {
     paddingTop: 20,
     paddingBottom: 130,
-    paddingHorizontal: 10,
     borderRadius: 8,
     flex: 1,
   },
@@ -151,8 +199,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   cardNumber: {
-    marginTop: 15,
-    marginBottom: 10,
     marginHorizontal: 15,
     flexDirection: "row",
     alignItems: "center",
@@ -160,5 +206,21 @@ const styles = StyleSheet.create({
   },
   cardHolder: {
     flexDirection: "column",
+  },
+  blackband: {
+    marginTop: 5,
+    height: 45,
+    backgroundColor: "black",
+    opacity: 0.85,
+  },
+  cvv: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    height: 45,
+    paddingHorizontal: 10,
+    backgroundColor: "white",
+    borderRadius: 8,
+    marginBottom: 20,
   },
 });
