@@ -1,16 +1,17 @@
-import React, { useState, useDeferredValue } from "react";
+import React, { useState, useDeferredValue, useRef } from "react";
 import {
   Keyboard,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
   View,
+  
 } from "react-native";
 import { Input } from "./Input";
 import { Dropdown } from "./Dropdown";
 import { Button, Card } from "react-native-paper";
 import { Label } from "./Label";
-import { CreditCard } from "./CreditCard";
+import { CardType, CreditCard, CreditCardInput } from "./CreditCard";
 export interface CreditCard {
   expiredDate: Date;
   cardHolder: string;
@@ -24,6 +25,7 @@ export const CreditCardForm = () => {
   const [cardCVV, setCardCVV] = useState("");
   const [cardHolder, setCardHolder] = useState("");
   const [cardNumber, setCardNumber] = useState("");
+  const [focused, setFocused] = useState<keyof CreditCardInput>();
   const [date, setDate] = useState({} as Expiry);
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
@@ -59,10 +61,25 @@ export const CreditCardForm = () => {
       ?.join(" ");
     setCardNumber(formattedNumber ?? "");
   };
-
+  const showMonth = () => {
+    return month.map((n)=>{
+      if(n<10){
+        return '0'+n
+      }
+      else return n
+    })
+  };
+  
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View>
+        <CreditCard
+          cardHolder={cardHolder}
+          cardNumber={cardNumber}
+          cardType={CardType.MASTER}
+          cvv={cardCVV}
+          focused={focused}
+        ></CreditCard>
         <Card mode="elevated" style={Styles.container}>
           <Label>Card Number</Label>
           <Input
@@ -70,9 +87,10 @@ export const CreditCardForm = () => {
             onChangeText={onCardNumberChange}
             keyboardType="numeric"
             maxLength={19}
+            onFocusCallback={()=>setFocused("cardNumber")}
           />
           <Label>Card Holders</Label>
-          <Input onChangeText={onCardHolderChange} value={cardHolder} />
+          <Input onChangeText={onCardHolderChange} value={cardHolder} onFocusCallback={()=>setFocused("cardHolder")}/>
           <View
             style={{
               flexDirection: "row",
@@ -82,7 +100,7 @@ export const CreditCardForm = () => {
               <Label>Expiration Date</Label>
               <View style={{ flexDirection: "row" }}>
                 <Dropdown
-                  data={month}
+                  data={showMonth()}
                   onSelect={(selectedItem, index) => {
                     setDate((prev) => ({ ...prev, month: selectedItem }));
                   }}
@@ -109,9 +127,6 @@ export const CreditCardForm = () => {
                 />
                 <Dropdown
                   data={year}
-                  onSelect={(selectedItem, index) => {
-                    console.log(selectedItem, index);
-                  }}
                   buttonTextAfterSelection={(selectedItem, index) => {
                     // text represented after item is selected
                     // if data array is an array of objects then return selectedItem.property to render after item is selected
@@ -121,6 +136,9 @@ export const CreditCardForm = () => {
                     // text represented for each item in dropdown
                     // if data array is an array of objects then return item.property to represent item in dropdown
                     return item;
+                  }}
+                  onSelect={(selectedItem, index) => {
+                    setDate((prev) => ({ ...prev, year: selectedItem }));
                   }}
                   // renderDropdownIcon={(isOpened) => {
                   //   return (
@@ -144,7 +162,8 @@ export const CreditCardForm = () => {
               <Input
                 keyboardType="numeric"
                 onChangeText={onCardCVVChange}
-                maxLength={3}
+                maxLength={4}
+                onFocusCallback={()=>setFocused("cvv")}
               />
             </View>
           </View>

@@ -83,16 +83,51 @@ export const CreditCard = ({
     }
   }, []);
   const cardLogo = useMemo(() => getLogoByType(cardType), [cardType]);
-
+  const flipAnimation = useRef( new Animated.Value( 0 ) ).current;
+  let flipRotation = 0;
+  flipAnimation.addListener( ( { value } ) => flipRotation = value );
+  const flipToFrontStyle = {
+    transform: [
+      { rotateY: flipAnimation.interpolate( {
+        inputRange: [ 0, 180 ],
+        outputRange: [ "0deg", "180deg" ]
+      } ) }
+    ]
+  };
+  const flipToBackStyle = {
+    transform: [
+      { rotateY: flipAnimation.interpolate( {
+        inputRange: [ 0, 180 ],
+        outputRange: [ "180deg", "360deg" ]
+      } ) }
+    ]
+  };
+  const flipToFront = () => {
+    Animated.timing( flipAnimation, {
+      toValue: 180,
+      duration: 500,
+      useNativeDriver: true,
+    } ).start();
+  };
+  const flipToBack = () => {
+    Animated.timing( flipAnimation, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    } ).start();
+  };
+  useEffect(()=>{
+    focused === "cvv"? flipToBack() : flipToFront()
+  })
   return (
-    <View style={styles.container}>
+    <View>
+    
+    <Animated.View style={{...styles.container, ...flipToFrontStyle}}>
       <ImageBackground
         source={cardImage}
         resizeMode="cover"
         style={styles.card}
       >
-        {focused === "cvv" ? (
-          <>
             <View style={styles.blackband}></View>
             <View style={{ paddingHorizontal: 10 }}>
               <View
@@ -122,8 +157,14 @@ export const CreditCard = ({
                 />
               </View>
             </View>
-          </>
-        ) : (
+      </ImageBackground>
+    </Animated.View>
+    <Animated.View style={{...styles.container, ...flipToBackStyle}}>
+      <ImageBackground
+        source={cardImage}
+        resizeMode="cover"
+        style={styles.card}
+      >
           <View style={styles.frontCard}>
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
@@ -156,13 +197,13 @@ export const CreditCard = ({
                 style={styles.cardHolder}
                 isFocused={focused === "expiryDate"}
               >
-                <Text style={{ color: "gray" }}>Card Holder</Text>
+                <Text style={{ color: "gray" }}>Expires</Text>
                 <CardNumberText>{formattedDate}</CardNumberText>
               </FocusableBox>
             </View>
           </View>
-        )}
-      </ImageBackground>
+          </ImageBackground>
+    </Animated.View>
     </View>
   );
 };
@@ -177,6 +218,8 @@ const styles = StyleSheet.create({
     minWidth: 300,
     overflow: "hidden",
     zIndex: 999,
+    backfaceVisibility: "hidden",
+    
   },
   frontCard: {
     flexDirection: "column",
