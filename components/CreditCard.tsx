@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { FadingImage } from "./FadingImage";
 import { FocusableBox } from "./FocusableBox";
+import { Expiry } from "./Form";
 import { Label } from "./Label";
 export enum CardType {
   AMEX = 1,
@@ -20,7 +21,7 @@ export enum CardType {
   VISA,
 }
 export interface CreditCardInput {
-  expiryDate?: Date;
+  expiryDate?: Expiry;
   cardHolder?: String;
   cardNumber?: String;
   cvv?: String;
@@ -58,9 +59,9 @@ export const CreditCard = ({
   const cardImage = useMemo(() => require("../assets/image/6.jpeg"), []);
   const cardNumberSections =
     cardNumber?.replaceAll(" ", "").match(/.{1,4}/g) ?? [];
-  const formattedDate = expiryDate
-    ? `${expiryDate.getMonth() + 1}/${expiryDate.getFullYear()}`
-    : "MM/YY";
+  const formattedDate = `${expiryDate?.month ?? "MM"}/${
+    expiryDate?.year ?? "YY"
+  }`;
   const getLogoByType = useCallback((type?: CardType) => {
     const basePath = "../assets/image";
     switch (type) {
@@ -83,88 +84,91 @@ export const CreditCard = ({
     }
   }, []);
   const cardLogo = useMemo(() => getLogoByType(cardType), [cardType]);
-  const flipAnimation = useRef( new Animated.Value( 0 ) ).current;
+  const flipAnimation = useRef(new Animated.Value(0)).current;
   let flipRotation = 0;
-  flipAnimation.addListener( ( { value } ) => flipRotation = value );
+  flipAnimation.addListener(({ value }) => (flipRotation = value));
   const flipToFrontStyle = {
     transform: [
-      { rotateY: flipAnimation.interpolate( {
-        inputRange: [ 0, 180 ],
-        outputRange: [ "0deg", "180deg" ]
-      } ) }
-    ]
+      {
+        rotateY: flipAnimation.interpolate({
+          inputRange: [0, 180],
+          outputRange: ["0deg", "180deg"],
+        }),
+      },
+    ],
   };
   const flipToBackStyle = {
     transform: [
-      { rotateY: flipAnimation.interpolate( {
-        inputRange: [ 0, 180 ],
-        outputRange: [ "180deg", "360deg" ]
-      } ) }
-    ]
+      {
+        rotateY: flipAnimation.interpolate({
+          inputRange: [0, 180],
+          outputRange: ["180deg", "360deg"],
+        }),
+      },
+    ],
   };
   const flipToFront = () => {
-    Animated.timing( flipAnimation, {
+    Animated.timing(flipAnimation, {
       toValue: 180,
       duration: 500,
       useNativeDriver: true,
-    } ).start();
+    }).start();
   };
   const flipToBack = () => {
-    Animated.timing( flipAnimation, {
+    Animated.timing(flipAnimation, {
       toValue: 0,
       duration: 500,
       useNativeDriver: true,
-    } ).start();
+    }).start();
   };
-  useEffect(()=>{
-    focused === "cvv"? flipToBack() : flipToFront()
-  })
+  useEffect(() => {
+    focused === "cvv" ? flipToBack() : flipToFront();
+  });
   return (
     <View>
-    
-    <Animated.View style={{...styles.container, ...flipToFrontStyle}}>
-      <ImageBackground
-        source={cardImage}
-        resizeMode="cover"
-        style={styles.card}
-      >
-            <View style={styles.blackband}></View>
-            <View style={{ paddingHorizontal: 10 }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "flex-end",
-                  marginRight: 5,
-                  marginTop: 10,
-                  marginBottom: 5,
-                }}
-              >
-                <Text style={{ color: "white" }}>CVV</Text>
-              </View>
-              <View style={styles.cvv}>
-                <Text>{"*".repeat(cvv?.length ?? 0)}</Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <Image
-                  source={cardLogo}
-                  resizeMode="contain"
-                  style={styles.chip}
-                />
-              </View>
+      <Animated.View style={{ ...styles.container, ...flipToFrontStyle }}>
+        <ImageBackground
+          source={cardImage}
+          resizeMode="cover"
+          style={styles.card}
+        >
+          <View style={styles.blackband}></View>
+          <View style={{ paddingHorizontal: 10 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                marginRight: 5,
+                marginTop: 10,
+                marginBottom: 5,
+              }}
+            >
+              <Text style={{ color: "white" }}>CVV</Text>
             </View>
-      </ImageBackground>
-    </Animated.View>
-    <Animated.View style={{...styles.container, ...flipToBackStyle}}>
-      <ImageBackground
-        source={cardImage}
-        resizeMode="cover"
-        style={styles.card}
-      >
+            <View style={styles.cvv}>
+              <Text>{"*".repeat(cvv?.length ?? 0)}</Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Image
+                source={cardLogo}
+                resizeMode="contain"
+                style={styles.chip}
+              />
+            </View>
+          </View>
+        </ImageBackground>
+      </Animated.View>
+      <Animated.View style={{ ...styles.container, ...flipToBackStyle }}>
+        <ImageBackground
+          source={cardImage}
+          resizeMode="cover"
+          style={styles.card}
+        >
           <View style={styles.frontCard}>
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
@@ -202,8 +206,8 @@ export const CreditCard = ({
               </FocusableBox>
             </View>
           </View>
-          </ImageBackground>
-    </Animated.View>
+        </ImageBackground>
+      </Animated.View>
     </View>
   );
 };
@@ -219,7 +223,6 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     zIndex: 999,
     backfaceVisibility: "hidden",
-    
   },
   frontCard: {
     flexDirection: "column",
